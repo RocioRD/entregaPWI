@@ -19,6 +19,35 @@ app.set('views', path.join(__dirname, 'views'));
 hbs.registerPartials(path.join(__dirname, 'views/partials'))
 //connection.end();
 
+console.log(process.env.USER)
+// conexion a la base de datos
+/*
+const conexion = mysql.createConnection({
+  host: process.env.HOST,
+  user: process.env.USER,
+  port: process.env.PORT,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE
+});
+*/
+
+const conexion = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  port: 3306,
+  password: "password",
+  database: "fullstack"
+});
+
+
+conexion.connect((err) => {
+  if (err) {
+    console.error(`Error en la conexion: ${err.stack}`)
+    return;
+  }
+  console.log(`Conectado a la base de datos ${process.env.DATABASE}`);
+  });
+
 app.listen(PORT, () => {
   console.log(`el servidor esta trabajando en el Puerto ${PORT}`);
 });
