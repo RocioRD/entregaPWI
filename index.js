@@ -23,9 +23,21 @@ hbs.registerPartials(path.join(__dirname, 'views/partials'))
 app.listen(PORT, () => {
   // console.log(`el servidor esta trabajando en el Puerto ${PORT}`);
  });
+
+ app.get('/', (req, res) => {
+  res.render('index', {
+    titulo: '',
+  })
+});
  
-app.get('/', (req, res) => {
-res.render('index', {
-  titulo: 'bienvenidos a la app de la utn',
-})
+app.get('/contacto', (req, res) => {
+  res.render('contacto', {
+    titulo: '',
+  })
+});
+
+app.get('/servicios', (req, res) => {
+  res.render('servicios', {
+    titulo: '',
+  })
 });
