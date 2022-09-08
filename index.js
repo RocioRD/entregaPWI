@@ -19,25 +19,30 @@ app.set('views', path.join(__dirname, 'views'));
 hbs.registerPartials(path.join(__dirname, 'views/partials'))
 //connection.end();
 
-
 app.listen(PORT, () => {
-  // console.log(`el servidor esta trabajando en el Puerto ${PORT}`);
- });
+  console.log(`el servidor esta trabajando en el Puerto ${PORT}`);
+});
 
  app.get('/', (req, res) => {
   res.render('index', {
-    titulo: '',
+    nombre: 'Rocio Ruperto',
   })
 });
  
 app.get('/contacto', (req, res) => {
   res.render('contacto', {
-    titulo: '',
+    nombre: 'Rocio Ruperto',
   })
 });
 
 app.get('/servicios', (req, res) => {
   res.render('servicios', {
-    titulo: '',
-  })
+    nombre: 'Rocio Ruperto',
+  });
+});
+
+  app.get('/suscripcion', (req, res) => {
+    res.render('suscripcion', {
+      nombre: 'Rocio Ruperto',
+    });
 });
