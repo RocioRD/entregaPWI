@@ -36,7 +36,7 @@ const conexion = mysql.createConnection({
   user: "root",
   port: 3306,
   password: "password",
-  database: "fullstack"
+  database: "entregaPwi"
 });
 
 
@@ -70,8 +70,43 @@ app.get('/servicios', (req, res) => {
   });
 });
 
-  app.get('/suscripcion', (req, res) => {
-    res.render('suscripcion', {
+  app.get('/crearusuario', (req, res) => {
+    res.render('crearusuario', {
       nombre: 'Rocio Ruperto',
+      titulo: 'Crear usuario',
     });
+});
+
+app.post('/crearusuario', (req, res) => {
+  console.log(req.body);
+
+  /********************************** */
+  if(req.body.nombre == '' || req.body.email == '') {
+    let validacion = 'Rellene los campos correctamente';
+    res.render('crearusuario', {
+      titulo: 'Crear usuario',
+      validacion
+    });
+  } 
+  else {
+
+   let datos = {
+      userName: req.body.nombre,
+     email: req.body.email,
+     password: req.body.password
+
+   };
+
+   let sql = 'INSERT INTO user SET ?';
+    conexion.query(sql, datos, (error, result) => {
+      let validacion = 'Perfecto todo kpo!!';
+      if (error) throw error;
+        res.render('crearusuario', {
+             titulo: 'Crear usuario',
+             validacion
+        });
+    });
+  }
+  /*********************************** */
+
 });
