@@ -23,10 +23,16 @@ body {
 }
 
 /* Declare heights because of positioning of img element */
-.carousel-item {
-  height: 32rem;
-}
 
+.imgRocio { 
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.carousel-inner {
+  background-color: orange;
+}
 
 /* MARKETING CONTENT
 -------------------------------------------------- */

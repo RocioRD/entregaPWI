@@ -1,12 +1,10 @@
-const express = require('express');
 require('dotenv').config();
+const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
 const  mysql = require('mysql2');
-const nodemailer = require('nodemailer');
-const { resourceLimits } = require('worker_threads');
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT_APP;
 
 // configurar middelwares
 app.use(express.json());
@@ -19,24 +17,12 @@ app.set('views', path.join(__dirname, 'views'));
 hbs.registerPartials(path.join(__dirname, 'views/partials'))
 //connection.end();
 
-console.log(process.env.USER)
-// conexion a la base de datos
-/*
 const conexion = mysql.createConnection({
-  host: process.env.HOST,
-  user: process.env.USER,
-  port: process.env.PORT,
-  password: process.env.PASSWORD,
+  host: process.env.HOST_DATABASE,
+  user: process.env.USER_DATABASE,
+  port: process.env.PORT_DATABASE,
+  password: process.env.PASSWORD_DATABASE,
   database: process.env.DATABASE
-});
-*/
-
-const conexion = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  port: 3306,
-  password: "password",
-  database: "entregaPwi"
 });
 
 
@@ -101,7 +87,7 @@ app.post('/crearusuario', (req, res) => {
 
    let sql = 'INSERT INTO user SET ?';
     conexion.query(sql, datos, (error, result) => {
-      mensaje = 'Perfecto todo kpo!!';
+      mensaje = 'Perfecto!';
       codeError =false;
       if (error) throw error;
         res.render('crearusuario', {
@@ -111,6 +97,69 @@ app.post('/crearusuario', (req, res) => {
         });
     });
   }
-  /*********************************** */
 
 });
+
+  /*********************************** */
+  app.get('/login', (req, res) => {
+    res.render('login', {
+      nombre: 'Rocio Ruperto',
+      titulo: 'Login',
+    });
+  });
+
+  
+  app.post('/login', (req, res) => {
+    let mensaje = '';
+    let codeError=true;
+    /********************************** */
+    if(req.body.nombre == '' || req.body.email == '') {
+      mensaje = 'Rellene los campos correctamente';
+      res.render('login', {
+        titulo: 'login',
+        codeError,
+        mensaje
+      });
+    } 
+    else {
+      
+     let datos = {
+       email: req.body.email,
+       password: req.body.password
+     }
+
+     let sql = `SELECT password FROM user WHERE email='` + req.body.email + `'`;
+     let password = ''
+     conexion.query(sql, (error, results, fields) => {
+       if (error) throw error;
+       
+       mensaje = 'Chequee mail o contrasenia';
+       
+       console.log(results);
+       password = results[0].password     
+       console.log(password);
+
+       if(password === req.body.password) {
+        codeError= false;
+        mensaje = 'Has logrado entrar!';
+        res.render('login', {
+          titulo: 'login',
+           codeError,
+           mensaje
+        });
+
+       } else {
+        codeError= true;
+        mensaje = 'No has logrado entrar.';
+        res.render('login', {
+          titulo: 'login',
+           codeError,
+           mensaje
+        });
+       }
+ 
+    });
+ 
+    }
+    
+  })
