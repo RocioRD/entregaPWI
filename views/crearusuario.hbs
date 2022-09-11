@@ -33,13 +33,21 @@
       <div class="mb-8 text-center">
          <input type="submit" class="button btn btn-success w-50 p-2" value="Crear">
       </div>
-  
-      <div class="text-center">
-         <h2 class="text-danger">
-             {{ validacion }}
-         </h2>
 
-         
+      {{#if codeError}}
+         <div class="text-center">
+         <h2 class="text-danger">
+             {{ mensaje }}
+         </h2>
+        </div>
+      {{else}}
+        <div class="text-center">
+          <h2 class="text-success">
+             {{ mensaje }}
+          </h2>
+        </div>
+      {{/if}}
+
       </div>
     </form>
   </div>

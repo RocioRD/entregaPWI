@@ -79,13 +79,15 @@ app.get('/servicios', (req, res) => {
 
 app.post('/crearusuario', (req, res) => {
   console.log(req.body);
-
+  let mensaje = '';
+  let codeError=true;
   /********************************** */
   if(req.body.nombre == '' || req.body.email == '') {
-    let validacion = 'Rellene los campos correctamente';
+    mensaje = 'Rellene los campos correctamente';
     res.render('crearusuario', {
       titulo: 'Crear usuario',
-      validacion
+      codeError,
+      mensaje
     });
   } 
   else {
@@ -99,11 +101,13 @@ app.post('/crearusuario', (req, res) => {
 
    let sql = 'INSERT INTO user SET ?';
     conexion.query(sql, datos, (error, result) => {
-      let validacion = 'Perfecto todo kpo!!';
+      mensaje = 'Perfecto todo kpo!!';
+      codeError =false;
       if (error) throw error;
         res.render('crearusuario', {
              titulo: 'Crear usuario',
-             validacion
+             codeError,
+             mensaje
         });
     });
   }
