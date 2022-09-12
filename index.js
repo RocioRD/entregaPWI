@@ -5,6 +5,7 @@ const hbs = require('hbs');
 const  mysql = require('mysql2');
 const app = express();
 const PORT = process.env.PORT || 8080;
+const nodemailer = require('nodemailer');
 
 // configurar middelwares
 app.use(express.json());
@@ -89,7 +90,14 @@ app.post('/crearusuario', (req, res) => {
     conexion.query(sql, datos, (error, result) => {
       mensaje = 'Perfecto!';
       codeError =false;
-      if (error) throw error;
+      if (error) { 
+        mensaje = error;
+        res.render('crearusuario', {
+          titulo: 'Crear usuario',
+          codeError: false,
+          mensaje
+        });
+      };
         res.render('crearusuario', {
              titulo: 'Crear usuario',
              codeError,
@@ -131,14 +139,19 @@ app.post('/crearusuario', (req, res) => {
      let sql = `SELECT password FROM user WHERE email='` + req.body.email + `'`;
      let password = ''
      conexion.query(sql, (error, results, fields) => {
-       if (error) throw error;
+      if (error) { 
+        mensaje = error;
+        res.render('login', {
+          titulo: 'Login',
+          codeError: false,
+          mensaje
+        });
+      };
        
        mensaje = 'Chequee mail o contrasenia';
        
-       console.log(results);
        password = results[0].password     
-       console.log(password);
-
+       
        if(password === req.body.password) {
         codeError= false;
         mensaje = 'Has logrado entrar!';
@@ -162,4 +175,60 @@ app.post('/crearusuario', (req, res) => {
  
     }
     
+  })
+
+app.get('/contacto', (req, res) => {
+  res.render('contacto', {
+    titulo: 'Formulario para suscripcion'
+  })
+});
+  
+app.post('/contacto', (req, res) => {
+  
+    const { nombre, email } = req.body;
+    let fecha = new Date();
+    //let dia = fecha.getFullYear();
+  
+    if (nombre == '' || email == '') {
+      let validacion = 'Rellene la suscripción correctamente.';
+      res.render('contacto', {
+        titulo: 'Formulario para suscripcion',
+        validacion
+      });
+     }else{
+  
+      console.log(nombre);
+      console.log(process.env.PASSWORD_GMAIL);
+  
+        async function envioMail(){
+       
+          let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, 
+            secure: true,
+            auth: { 
+              user: process.env.USERMAIL, 
+              pass: process.env.PASSWORD_GMAIL  //16 caracteres que da gmail
+              }
+          });
+  
+          let envio = await transporter.sendMail({
+              from: process.env.USERMAIL,
+              to: `${email}`,
+              subject: 'Gracias por suscribirte a nuestra empresa',
+              html: `Muchas gracias por contactarse con nosotros, estaremos enviando su pedido a la brevedad. <br>
+               Todas nuestras promociones ya estarán a su disposición. <br>
+               ${fecha}`
+          });
+  
+          //res.send(`Tu nombre es ${nombre} y tu email registrado es ${email}`);
+          res.render('enviado', {
+              titulo: 'mail enviado',
+              nombre, 
+              email
+          })  
+      }
+      envioMail();
+    }
+  
   })
