@@ -4,7 +4,7 @@ const path = require('path');
 const hbs = require('hbs');
 const  mysql = require('mysql2');
 const app = express();
-const PORT = process.env.PORT_APP;
+const PORT = process.env.PORT || 8080;
 
 // configurar middelwares
 app.use(express.json());
